@@ -4,12 +4,10 @@ import AnswerBox from './components/AnswerBox';
 
 
 async function querySummarization (data){
-const response = await fetch(
-  'https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn',
+const response = await fetch('http://localhost:8000/summarize/',
   {
     method: 'POST',
     headers: {
-      Authorization: 'Bearer YOUR_HF_TOKEN', 
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),

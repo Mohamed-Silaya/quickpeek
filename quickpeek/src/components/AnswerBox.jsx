@@ -1,6 +1,5 @@
 import React from 'react';
 import CopyButton from './CopyButton';
-import { Paper, Typography, Stack } from '@mui/material';
 
 export default function AnswerBox({ answer, onCopy, copied }) {
   if (!answer) return null;
