@@ -2,22 +2,52 @@ import React, { useState } from 'react';
 import InputBox from './components/InputBox';
 import AnswerBox from './components/AnswerBox';
 
+
+async function querySummarization (data){
+const response = await fetch(
+  'https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn',
+  {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer YOUR_HF_TOKEN', 
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  }
+);
+const result = await response.json();
+return result;
+}
+
 function App() {
   const [input, setInput] = useState('');
   const [answer, setAnswer] = useState('');
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
+
+
+  
   async function handleSummarize() {
-    if (!input.trim()) return;
+    if (!input.trim()) 
+      return;
     setLoading(true);
     setCopied(false);
    
-      setAnswer("TEST>>>>>");
-      setLoading(false);
-  
+     
+    try {
+      const response = await querySummarization({ inputs: input });
+      const summary =
+        (Array.isArray(response) && response[0]?.summary_text) ||
+        response.summary_text ||
+        "No summary returned.";
+      setAnswer(summary);
+    } catch (e) {
+      setAnswer("Error while fetching summary.");
+    }
+    setLoading(false);
   }
-
+  
   function handleCopy() {
     navigator.clipboard.writeText(answer);
     setCopied(true);
